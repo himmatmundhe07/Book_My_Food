@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Food Ordering & Billing System — Terminal Application
+## TypeScript Practice Assignment
 
-## Getting Started
+A robust, type-safe, terminal-based Food Ordering & Billing System built with **TypeScript** and **Node.js**.
 
-First, run the development server:
+---
 
+## 🚀 Quick Start
+
+### 1. Launch Interactive Terminal Application
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run terminal
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Run Automated Verification Suite (39 Tests)
+```bash
+npx tsx src/verify.ts
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run TypeScript Compiler Typecheck
+```bash
+npx tsc --noEmit
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📁 Architecture & File Structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+src/
+├── types.ts          # Core interfaces, type aliases, union types, intersection types, discriminated union (BillResult)
+├── data.ts           # 12 Food items across 4 categories, sample Guest/Members, and Coupon offers
+├── cart.ts           # Cart operations (addToCart, removeFromCart, updateQuantity, calculateItemTotal, calculateSubtotal)
+├── customer.ts       # Customer factory functions (Guest & Member: Silver, Gold, Platinum), type narrowing guard
+├── payment.ts        # Payment union (Cash, Card, UPI), narrowing validations, change calculation, assertNever
+├── billing.ts        # Billing calculations (Membership + ₹2000 bulk discount + coupons + 5% GST), BillResult
+├── order.ts          # Order status management, transitions, order history tracking, exhaustive formatting
+├── utils.ts          # ANSI styling, ASCII box formatting, Indian Rupee (₹) currency formatter, assertNever helper
+├── verify.ts         # Automated test suite with 39 assertions testing all rules and edge cases
+└── index.ts          # Interactive terminal workflow and main application loop
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📋 Features Implemented
 
-## Deploy on Vercel
+1. **Food Items Menu**:
+   - 12 items spanning `"pizza" | "burger" | "drink" | "dessert"`.
+   - Categorized viewing, search by keyword, and out-of-stock indicators.
+2. **Customer Management**:
+   - `Guest` (0% discount) vs `Member` (Silver 5%, Gold 10%, Platinum 15%).
+   - Reusable `Customer` union type with type narrowing using the `in` operator.
+3. **Cart Operations**:
+   - `CartItem` intersection type (`FoodItem & OrderDetail`).
+   - Add to cart (merges quantities on duplicates and appends special instructions).
+   - Update quantity and remove item.
+   - Subtotal calculated with `reduce()`.
+4. **Discounts & Billing**:
+   - Tiered membership discount (Silver: 5%, Gold: 10%, Platinum: 15%).
+   - Additional 5% bulk discount when subtotal exceeds ₹2,000.
+   - Sequence: Subtotal -> Membership Discount -> Bulk Discount -> Coupon -> After Discount -> 5% GST -> Final Amount.
+5. **Payment Processing**:
+   - Discriminated union: `CashPayment | CardPayment | UpiPayment`.
+   - Type narrowing via `in` and method check.
+   - Cash: validates amount and computes change.
+   - Card: validates exactly 4 numeric digits.
+   - UPI: validates transaction reference ID.
+6. **Order Status & Transitions**:
+   - Statuses: `"pending" | "confirmed" | "preparing" | "delivered" | "cancelled"`.
+   - Exhaustive handling using `never`-based `assertNever()`.
+7. **Discriminated Union Bill Result**:
+   - `BillSuccess` with complete receipt information.
+   - `BillError` with descriptive error message.
+8. **Optional Features Included**:
+   - 🎟️ **Coupon Code System**: (`WELCOME50`, `FEAST20`, `SUPER300`) with minimum order value and maximum cap rules.
+   - 🔍 **Category Filter & Search**: filter by category or search by item name.
+   - 📜 **Order History**: track past orders and their live status.
+   - 🎨 **Terminal UI Beautification**: ASCII box borders, ANSI colors, and emojis.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛡️ Adherence to All Assignment Restrictions
+
+- ✅ **Strict TypeScript**: Full types for all variables, parameters, and return types.
+- ✅ **No `any`**: 0 uses of `any`.
+- ✅ **No Classes**: Pure functions and immutable/structural typing.
+- ✅ **No Generics**: Only standard built-in arrays `Type[]`.
+- ✅ **Modular**: Clean separation of concerns across multiple files.
+- ✅ **Exhaustiveness**: `assertNever(value: never): never` enforces compile-time exhaustiveness.
